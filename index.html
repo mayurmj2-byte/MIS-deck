@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIS Deck Generator — Fixed Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1E2761; --navy-dk: #141A45; --teal: #028090; --teal-lt: #d6f0f4;
+  --white: #ffffff; --off: #f5f7fc; --border: #e2e8f0; --border2: #c8d4e8;
+  --slate: #64748b; --slate-lt: #94a3b8; --dark: #1e293b;
+  --green: #16a34a; --green-bg: #f0fdf4; --green-bd: #bbf7d0;
+  --amber: #d97706; --amber-bg: #fffbeb; --amber-bd: #fde68a;
+  --red: #dc2626; --red-bg: #fef2f2; --red-bd: #fecaca;
+  --radius: 10px; --radius-lg: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--off);
+  color: var(--dark);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ─────────────────────────────────────── */
+.topbar {
+  background: var(--navy-dk);
+  padding: 0 2rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.brand-dot { width: 28px; height: 28px; background: var(--teal); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  font-size: 13px; color: #fff; letter-spacing: -0.5px; }
+.brand-name { font-size: 14px; font-weight: 500; color: #fff; }
+.brand-ver { font-size: 11px; color: #7a93c0; margin-left: 4px; }
+.topbar-badge { font-size: 11px; color: var(--teal); background: rgba(2,128,144,0.15);
+  padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(2,128,144,0.3); }
+
+/* ── HERO ───────────────────────────────────────── */
+.hero {
+  background: var(--navy-dk);
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+  border-bottom: 3px solid var(--teal);
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+.hero h1 span { color: var(--teal); }
+.hero p { font-size: 15px; color: #8fa8cc; max-width: 520px; margin: 0 auto 1.75rem; }
+.hero-stats { display: flex; justify-content: center; gap: 2.5rem; }
+.hero-stat .num { font-size: 1.6rem; font-weight: 600; color: #fff; line-height: 1; }
+.hero-stat .lbl { font-size: 11px; color: #6a89b5; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+/* ── MAIN LAYOUT ────────────────────────────────── */
+.main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── CARD ───────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.card-title {
+  font-size: 13px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--slate); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title .icon { width: 22px; height: 22px; background: var(--teal-lt);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; }
+
+/* ── UPLOAD ZONES ───────────────────────────────── */
+.upload-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+@media(max-width:600px){ .upload-grid { grid-template-columns: 1fr; } }
+
+.upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  position: relative;
+  min-height: 130px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.upload-zone:hover, .upload-zone.drag { border-color: var(--teal); background: var(--teal-lt); }
+.upload-zone.loaded { border-color: var(--green); border-style: solid; background: var(--green-bg); }
+.upload-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.upload-zone .uz-icon { font-size: 1.6rem; }
+.upload-zone .uz-label { font-size: 12px; font-weight: 600; color: var(--dark); }
+.upload-zone .uz-sub { font-size: 11px; color: var(--slate); }
+.upload-zone .uz-file { font-size: 11px; color: var(--green); font-weight: 500; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.upload-zone .uz-clear {
+  position: absolute; top: 6px; right: 8px;
+  background: none; border: none; cursor: pointer; font-size: 14px;
+  color: var(--slate); line-height: 1; padding: 2px 4px; border-radius: 4px; z-index: 2;
+}
+.upload-zone .uz-clear:hover { background: var(--red-bg); color: var(--red); }
+
+/* ── SETTINGS ROW ───────────────────────────────── */
+.settings-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
+@media(max-width:500px){ .settings-row { grid-template-columns: 1fr; } }
+label.field-label { display: block; font-size: 12px; font-weight: 500; color: var(--slate); margin-bottom: 5px; }
+input[type=month], input[type=text] {
+  width: 100%; padding: 9px 12px; border: 1px solid var(--border2);
+  border-radius: var(--radius); font-size: 14px; font-family: 'DM Sans',sans-serif;
+  color: var(--dark); background: var(--white); outline: none;
+  transition: border-color .2s;
+}
+input[type=month]:focus, input[type=text]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(2,128,144,.1); }
+
+/* ── PREVIEW TABLE ──────────────────────────────── */
+.preview-wrap { overflow-x: auto; max-height: 220px; border-radius: var(--radius); border: 1px solid var(--border); }
+table.preview-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.preview-tbl th { background: var(--navy-dk); color: #b8cce4; padding: 7px 10px; text-align: left; position: sticky; top: 0; font-weight: 500; }
+table.preview-tbl td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--dark); }
+table.preview-tbl tr:last-child td { border-bottom: none; }
+table.preview-tbl tr:hover td { background: var(--off); }
+.preview-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.ptab { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border2); background: var(--white); cursor: pointer; color: var(--slate); }
+.ptab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* ── GENERATE BUTTON ────────────────────────────── */
+.gen-wrap { text-align: center; padding: 0.5rem 0 1rem; }
+.gen-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--teal); color: #fff;
+  padding: 14px 36px; border-radius: 50px;
+  border: none; font-size: 16px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer; letter-spacing: -.2px;
+  box-shadow: 0 4px 18px rgba(2,128,144,.35);
+  transition: transform .15s, box-shadow .15s;
+}
+.gen-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(2,128,144,.45); }
+.gen-btn:active { transform: scale(.97); }
+.gen-btn:disabled { background: var(--slate-lt); box-shadow: none; cursor: not-allowed; transform: none; }
+.gen-btn .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-btn.loading .btn-icon { display: none; }
+.gen-btn.loading .spinner { display: block; }
+
+/* ── STATUS ─────────────────────────────────────── */
+.status-bar {
+  display: none; align-items: center; gap: 10px;
+  background: var(--navy-dk); color: #b8cce4;
+  border-radius: var(--radius); padding: 10px 16px;
+  font-size: 13px; margin-bottom: 1rem;
+}
+.status-bar.show { display: flex; }
+.status-bar.success { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
+.status-bar.error   { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-bd); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+.status-bar.success .status-dot { background: var(--green); }
+.status-bar.error   .status-dot { background: var(--red); }
+
+/* ── SAMPLE DATA BADGE ──────────────────────────── */
+.sample-notice {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--amber); background: var(--amber-bg);
+  border: 1px solid var(--amber-bd); border-radius: var(--radius);
+  padding: 8px 14px; margin-bottom: 12px;
+}
+
+/* ── FIXES LIST ─────────────────────────────────── */
+.fixes-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+@media(max-width:540px){ .fixes-grid { grid-template-columns: 1fr; } }
+.fix-item { background: var(--green-bg); border: 1px solid var(--green-bd);
+  border-radius: var(--radius); padding: 10px 12px; }
+.fix-item .fix-head { font-size: 12px; font-weight: 600; color: var(--green); margin-bottom: 3px; display: flex; gap: 6px; align-items: center; }
+.fix-item .fix-body { font-size: 11px; color: var(--slate); line-height: 1.5; }
+
+/* ── FOOTER ─────────────────────────────────────── */
+footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--slate-lt); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-dot">MJ</div>
+    <span class="brand-name">MIS Deck Generator</span>
+    <span class="brand-ver">v2.0 Fixed</span>
+  </div>
+  <span class="topbar-badge">✓ All bugs fixed</span>
+</div>
+
+<div class="hero">
+  <h1>Management deck,<br><span>generated in seconds</span></h1>
+  <p>Upload your Sales, KPI and Finance data — get a fully formatted PowerPoint MIS report, boardroom-ready.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">Slides</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="lbl">Data modules</div></div>
+    <div class="hero-stat"><div class="num">.pptx</div><div class="lbl">Output format</div></div>
+    <div class="hero-stat"><div class="num">0</div><div class="lbl">Sign-up required</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Bug Fixes -->
+  <div class="card">
+    <div class="card-title"><span class="icon">✓</span> Bugs fixed vs original</div>
+    <div class="fixes-grid">
+      <div class="fix-item"><div class="fix-head">⚡ Div/0 on zero-target KPIs</div><div class="fix-body">safeDiv() returns 0% instead of Infinity when target is 0</div></div>
+      <div class="fix-item"><div class="fix-head">📊 Negative EBITDA bars</div><div class="fix-body">valAxisMinVal set so negative bars render correctly, not clipped at 0</div></div>
+      <div class="fix-item"><div class="fix-head">🔢 Large number overflow</div><div class="fix-body">Numbers formatted as $6.6M / $320K — won't spill out of text boxes</div></div>
+      <div class="fix-item"><div class="fix-head">🔽 "Lower is better" KPIs</div><div class="fix-body">Churn Rate, CAC, Sales Cycle colour correctly — green when under target</div></div>
+      <div class="fix-item"><div class="fix-head">🔤 Lowercase CSV headers</div><div class="fix-body">Header normalisation — month/MONTH/Month all detected correctly</div></div>
+      <div class="fix-item"><div class="fix-head">🎨 Hex colour corruption</div><div class="fix-body">Removed # prefix from all hex values — was silently corrupting chart XML</div></div>
+      <div class="fix-item"><div class="fix-head">🔁 Reused shadow objects</div><div class="fix-body">Fresh shadow object per shape — prevents EMU conversion corruption</div></div>
+      <div class="fix-item"><div class="fix-head">📁 Empty dataset crash</div><div class="fix-body">Slides are skipped gracefully when a module has no data rows</div></div>
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="card">
+    <div class="card-title"><span class="icon">↑</span> Upload data files</div>
+    <div id="sample-notice" class="sample-notice">
+      ⚡ No files uploaded — deck will use built-in sample data. Upload your own CSV/XLSX to override any module.
+    </div>
+    <div class="upload-grid">
+      <div class="upload-zone" id="zone-sales" ondragover="onDrag(event,'sales')" ondragleave="offDrag('sales')" ondrop="onDrop(event,'sales')">
+        <input type="file" accept=".csv,.xlsx" id="file-sales" onchange="handleFile('sales',this)">
+        <div class="uz-icon">📈</div>
+        <div class="uz-label">Sales &amp; Revenue</div>
+        <div class="uz-sub">sales.csv / .xlsx</div>
+        <div class="uz-file" id="fname-sales"></div>
+        <button class="uz-clear" id="clear-sales" style="display:none" onclick="clearFile('sales',event)">✕</button>
+      </div>
+      <div class="upload-zone" id="zone-kpi" ondragover="onDrag(event,'kpi')" ondragleave="offDrag('kpi')" ondrop="onDrop(event,'kpi')">
+        <input type="file" accept=".csv,.xlsx" id="file-kpi" onchange="handleFile('kpi',this)">
+        <div class="uz-icon">🎯</div>
+        <div class="uz-label">Operations / KPIs</div>
+        <div class="uz-sub">kpis.csv / .xlsx</div>
+        <div class="uz-file" id="fname-kpi"></div>
+        <button class="uz-clear" id="clear-kpi" style="display:none" onclick="clearFile('kpi',event)">✕</button>
+      </div>
+      <div class="upload-zone" id="zone-finance" ondragover="onDrag(event,'finance')" ondragleave="offDrag('finance')" ondrop="onDrop(event,'finance')">
+        <input type="file" accept=".csv,.xlsx" id="file-finance" onchange="handleFile('finance',this)">
+        <div class="uz-icon">💰</div>
+        <div class="uz-label">Finance / P&amp;L</div>
+        <div class="uz-sub">finance.csv / .xlsx</div>
+        <div class="uz-file" id="fname-finance"></div>
+        <button class="uz-clear" id="clear-finance" style="display:none" onclick="clearFile('finance',event)">✕</button>
+      </div>
+    </div>
+    <p style="margin-top:10px;font-size:11px;color:var(--slate-lt)">
+      <b>Sales:</b> Month, Revenue, Target*, Region*, Product* &nbsp;|&nbsp;
+      <b>KPIs:</b> KPI, Actual, Target*, Unit* &nbsp;|&nbsp;
+      <b>Finance:</b> Revenue, Month*, COGS*, Opex*, EBITDA* &nbsp;&nbsp;(* optional)
+    </p>
+  </div>
+
+  <!-- Settings -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚙</span> Report settings</div>
+    <div class="settings-row">
+      <div>
+        <label class="field-label">Report month</label>
+        <input type="month" id="rpt-month" value="">
+      </div>
+      <div>
+        <label class="field-label">Company / entity name</label>
+        <input type="text" id="rpt-company" placeholder="e.g. Acme Corp" value="">
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="card" id="preview-card">
+    <div class="card-title"><span class="icon">👁</span> Data preview</div>
+    <div class="preview-tabs">
+      <button class="ptab active" onclick="showPreview('sales',this)">📈 Sales</button>
+      <button class="ptab" onclick="showPreview('kpi',this)">🎯 KPIs</button>
+      <button class="ptab" onclick="showPreview('finance',this)">💰 Finance</button>
+    </div>
+    <div id="preview-content"></div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-bar" id="status-bar">
+    <div class="status-dot"></div>
+    <span id="status-msg">Ready</span>
+  </div>
+
+  <!-- Generate -->
+  <div class="gen-wrap">
+    <button class="gen-btn" id="gen-btn" onclick="generate()">
+      <span class="btn-icon">⚡</span>
+      <div class="spinner"></div>
+      Generate PowerPoint deck →
+    </button>
+  </div>
+
+</div>
+
+<footer>MIS Deck Generator v2.0 · Fixed Edition · Built with PptxGenJS · No data leaves your browser</footer>
+
+<!-- Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<script>
+'use strict';
+
+// ── COLOUR PALETTE ────────────────────────────────────────────────────────────
+const C = {
+  navy:'1E2761', navyDk:'141A45', teal:'028090', tealLt:'E0F4F7',
+  white:'FFFFFF', offWht:'F8F9FC', slate:'64748B', slateL:'94A3B8', dark:'1E293B',
+  iceBlue:'CADCFC',
+  green:'16A34A', greenBg:'F0FDF4', amber:'D97706', amberBg:'FFFBEB', red:'DC2626', redBg:'FEF2F2',
+};
+
+// ── SAMPLE DATA ───────────────────────────────────────────────────────────────
+const SAMPLE = {
+  sales: [
+    {Month:'Jan-25',Revenue:980000,Target:900000,Region:'North',Product:'Widget A'},
+    {Month:'Feb-25',Revenue:1050000,Target:1000000,Region:'South',Product:'Widget B'},
+    {Month:'Mar-25',Revenue:890000,Target:950000,Region:'East',Product:'Widget A'},
+    {Month:'Apr-25',Revenue:1120000,Target:1050000,Region:'North',Product:'Widget C'},
+    {Month:'May-25',Revenue:1350000,Target:1200000,Region:'West',Product:'Widget B'},
+    {Month:'Jun-25',Revenue:1180000,Target:1250000,Region:'South',Product:'Widget A'},
+  ],
+  kpi: [
+    {KPI:'Revenue Growth',Actual:12.5,Target:10.0,Unit:'%'},
+    {KPI:'Gross Margin',Actual:62.3,Target:65.0,Unit:'%'},
+    {KPI:'Customer NPS',Actual:48,Target:50,Unit:'pts'},
+    {KPI:'Churn Rate',Actual:2.1,Target:2.5,Unit:'%'},
+    {KPI:'CAC',Actual:320,Target:300,Unit:'$'},
+    {KPI:'Sales Cycle (days)',Actual:28,Target:30,Unit:'days'},
+    {KPI:'Pipeline Coverage',Actual:3.2,Target:3.0,Unit:'x'},
+    {KPI:'EBITDA Margin',Actual:18.4,Target:20.0,Unit:'%'},
+  ],
+  finance: [
+    {Month:'Jan-25',Revenue:980000,COGS:360000,Opex:280000,EBITDA:340000},
+    {Month:'Feb-25',Revenue:1050000,COGS:388000,Opex:295000,EBITDA:367000},
+    {Month:'Mar-25',Revenue:890000,COGS:330000,Opex:310000,EBITDA:250000},
+    {Month:'Apr-25',Revenue:1120000,COGS:414000,Opex:305000,EBITDA:401000},
+    {Month:'May-25',Revenue:1350000,COGS:499500,Opex:318000,EBITDA:532500},
+    {Month:'Jun-25',Revenue:1180000,COGS:436600,Opex:322000,EBITDA:421400},
+  ],
+};
+const LOWER_BETTER = new Set(['Churn Rate','CAC','Sales Cycle (days)']);
+
+// ── USER DATA STATE ───────────────────────────────────────────────────────────
+const userData = { sales: null, kpi: null, finance: null };
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+// FIX 1: Safe division — never returns Infinity
+const safeDiv = (a, t) => (t === 0 || t == null) ? 0 : (a / t) * 100;
+
+// FIX 3: Compact number formatter — prevents text-box overflow
+function fmt(n) {
+  const abs = Math.abs(n), sign = n < 0 ? '-' : '';
+  if (abs >= 1e9) return `${sign}$${(abs/1e9).toFixed(1)}B`;
+  if (abs >= 1e6) return `${sign}$${(abs/1e6).toFixed(1)}M`;
+  if (abs >= 1e3) return `${sign}$${(abs/1e3).toFixed(0)}K`;
+  return `${sign}$${abs.toFixed(0)}`;
+}
+function fmtPct(n, d=1) { return `${n.toFixed(d)}%`; }
+
+// FIX 4: KPI colour logic — accounts for lower-is-better metrics
+function kpiColor(row) {
+  const pct = safeDiv(parseFloat(row.Actual), parseFloat(row.Target));
+  const lb  = LOWER_BETTER.has(row.KPI);
+  const good = lb ? pct <= 100 : pct >= 100;
+  const ok   = lb ? pct <= 115 : pct >= 85;
+  if (good) return { bg:C.greenBg, text:C.green, icon:'✓' };
+  if (ok)   return { bg:C.amberBg, text:C.amber, icon:'~' };
+  return { bg:C.redBg, text:C.red, icon:'!' };
+}
+
+// FIX 5: Normalise headers (case + whitespace)
+function normalise(rows) {
+  return rows.map(r => {
+    const o = {};
+    Object.keys(r).forEach(k => { o[k.trim().toLowerCase()] = r[k]; });
+    return o;
+  });
+}
+
+// Coerce normalised row back to expected keys
+function coerceSales(r) {
+  return {
+    Month:   r.month   || r['report month'] || '',
+    Revenue: parseFloat(r.revenue) || 0,
+    Target:  parseFloat(r.target)  || 0,
+    Region:  r.region  || '',
+    Product: r.product || '',
+  };
+}
+function coerceKPI(r) {
+  return {
+    KPI:    r.kpi  || r['kpi name'] || r.name || '',
+    Actual: parseFloat(r.actual) || 0,
+    Target: parseFloat(r.target) || 0,
+    Unit:   r.unit || '',
+  };
+}
+function coerceFinance(r) {
+  return {
+    Month:   r.month || '',
+    Revenue: parseFloat(r.revenue) || 0,
+    COGS:    parseFloat(r.cogs)    || 0,
+    Opex:    parseFloat(r.opex)    || 0,
+    EBITDA:  parseFloat(r.ebitda)  || 0,
+  };
+}
+
+// ── CSV/XLSX PARSING ──────────────────────────────────────────────────────────
+function parseFile(file, module, cb) {
+  const reader = new FileReader();
+  const isXLSX = file.name.toLowerCase().endsWith('.xlsx') || file.name.toLowerCase().endsWith('.xls');
+
+  reader.onload = e => {
+    let rows = [];
+    try {
+      if (isXLSX) {
+        const wb = XLSX.read(e.target.result, { type:'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+      } else {
+        // CSV
+        const text = e.target.result;
+        const lines = text.trim().split(/\r?\n/);
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+        rows = lines.slice(1).filter(l => l.trim()).map(line => {
+          const vals = line.match(/("(?:[^"]|"")*"|[^,]*)/g) || [];
+          const obj = {};
+          headers.forEach((h,i) => { obj[h] = (vals[i]||'').replace(/^"|"$/g,'').trim(); });
+          return obj;
+        });
+      }
+      // FIX 5: normalise headers
+      const norm = normalise(rows);
+      let coerced;
+      if (module === 'sales')   coerced = norm.map(coerceSales).filter(r => r.Revenue > 0 || r.Month);
+      if (module === 'kpi')     coerced = norm.map(coerceKPI).filter(r => r.KPI);
+      if (module === 'finance') coerced = norm.map(coerceFinance).filter(r => r.Revenue > 0 || r.Month);
+      cb(null, coerced);
+    } catch(err) {
+      cb(err, null);
+    }
+  };
+  if (isXLSX) reader.readAsArrayBuffer(file);
+  else reader.readAsText(file);
+}
+
+// ── FILE UPLOAD HANDLERS ──────────────────────────────────────────────────────
+function handleFile(module, input) {
+  const file = input.files[0];
+  if (!file) return;
+  // FIX 8: validate file type
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['csv','xlsx','xls'].includes(ext)) {
+    setStatus('error', `Invalid file type ".${ext}" — please use .csv or .xlsx`);
+    input.value = '';
+    return;
+  }
+  setStatus('loading', `Parsing ${file.name}…`);
+  parseFile(file, module, (err, rows) => {
+    if (err) { setStatus('error', `Parse error: ${err.message}`); return; }
+    if (!rows || rows.length === 0) {
+      setStatus('error', `No data rows found in ${file.name} — check column headers`);
+      return;
+    }
+    userData[module] = rows;
+    document.getElementById(`fname-${module}`).textContent = `✓ ${file.name} (${rows.length} rows)`;
+    document.getElementById(`zone-${module}`).classList.add('loaded');
+    document.getElementById(`clear-${module}`).style.display = 'block';
+    updateSampleNotice();
+    showPreview(module);
+    setStatus('success', `Loaded ${file.name} — ${rows.length} rows parsed`);
+  });
+}
+
+function clearFile(module, e) {
+  e.stopPropagation(); e.preventDefault();
+  userData[module] = null;
+  document.getElementById(`file-${module}`).value = '';
+  document.getElementById(`fname-${module}`).textContent = '';
+  document.getElementById(`zone-${module}`).classList.remove('loaded');
+  document.getElementById(`clear-${module}`).style.display = 'none';
+  updateSampleNotice();
+  showPreview(module);
+  setStatus('', '');
+}
+
+function onDrag(e, module) { e.preventDefault(); document.getElementById(`zone-${module}`).classList.add('drag'); }
+function offDrag(module) { document.getElementById(`zone-${module}`).classList.remove('drag'); }
+function onDrop(e, module) {
+  e.preventDefault(); offDrag(module);
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    const input = document.getElementById(`file-${module}`);
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    handleFile(module, input);
+  }
+}
+
+function updateSampleNotice() {
+  const anyLoaded = userData.sales || userData.kpi || userData.finance;
+  document.getElementById('sample-notice').style.display = anyLoaded ? 'none' : 'flex';
+}
+
+// ── PREVIEW ───────────────────────────────────────────────────────────────────
+let activePreviewTab = 'sales';
+function showPreview(module, btn) {
+  activePreviewTab = module;
+  if (btn) {
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const data = userData[module] || SAMPLE[module];
+  if (!data || !data.length) {
+    document.getElementById('preview-content').innerHTML = '<p style="font-size:12px;color:var(--slate);padding:8px">No data</p>';
+    return;
+  }
+  const keys = Object.keys(data[0]);
+  const rows = data.slice(0, 8);
+  let html = '<div class="preview-wrap"><table class="preview-tbl"><thead><tr>' +
+    keys.map(k => `<th>${k}</th>`).join('') + '</tr></thead><tbody>' +
+    rows.map(r => '<tr>' + keys.map(k => `<td>${r[k] !== undefined ? r[k] : ''}</td>`).join('') + '</tr>').join('') +
+    '</tbody></table></div>';
+  if (data.length > 8) html += `<p style="font-size:11px;color:var(--slate);margin-top:6px">Showing 8 of ${data.length} rows</p>`;
+  document.getElementById('preview-content').innerHTML = html;
+}
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function setStatus(type, msg) {
+  const bar = document.getElementById('status-bar');
+  bar.className = 'status-bar';
+  if (!msg) return;
+  bar.classList.add('show');
+  if (type) bar.classList.add(type);
+  document.getElementById('status-msg').textContent = msg;
+}
+
+// ── PPT GENERATION ────────────────────────────────────────────────────────────
+async function generate() {
+  const btn = document.getElementById('gen-btn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  const salesData   = userData.sales   || SAMPLE.sales;
+  const kpiData     = userData.kpi     || SAMPLE.kpi;
+  const financeData = userData.finance || SAMPLE.finance;
+
+  const monthRaw = document.getElementById('rpt-month').value;
+  const company  = document.getElementById('rpt-company').value.trim() || 'Your Company';
+  const monthLabel = monthRaw
+    ? new Date(monthRaw + '-02').toLocaleString('en-US', { month:'long', year:'numeric' })
+    : 'Current Period';
+
+  setStatus('loading', 'Building slides…');
+
+  try {
+    const pres = new PptxGenJS();
+    pres.layout  = 'LAYOUT_16x9';
+    pres.author  = 'MIS Deck Generator v2';
+    pres.company = company;
+    pres.title   = `${company} — MIS Report ${monthLabel}`;
+
+    buildTitle(pres, company, monthLabel, salesData, financeData);
+    setStatus('loading', 'Building Sales slide…');
+    await tick();
+    if (salesData.length) buildSales(pres, salesData, monthLabel);
+    setStatus('loading', 'Building KPI slide…');
+    await tick();
+    if (kpiData.length)   buildKPI(pres, kpiData, monthLabel);
+    setStatus('loading', 'Building Finance slide…');
+    await tick();
+    if (financeData.length) buildFinance(pres, financeData, monthLabel);
+    buildSummary(pres, company, monthLabel, salesData, kpiData, financeData);
+
+    setStatus('loading', 'Writing .pptx file…');
+    await tick();
+
+    const safeName = company.replace(/[^a-z0-9]/gi,'_').toLowerCase();
+    const safeMon  = monthLabel.replace(/\s+/g,'-');
+    await pres.writeFile({ fileName: `MIS_${safeName}_${safeMon}.pptx` });
+    setStatus('success', `✓ Downloaded — MIS_${safeName}_${safeMon}.pptx`);
+  } catch(err) {
+    setStatus('error', `Error: ${err.message}`);
+    console.error(err);
+  }
+
+  btn.classList.remove('loading'); btn.disabled = false;
+}
+
+const tick = () => new Promise(r => setTimeout(r, 20));
+
+// ── SLIDE: TITLE ──────────────────────────────────────────────────────────────
+function buildTitle(pres, company, month, salesData, financeData) {
+  const s = pres.addSlide();
+  s.background = { color: C.navyDk };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:0.22, h:5.625, fill:{color:C.teal}, line:{color:C.teal} });
+  s.addText(company.toUpperCase(), { x:0.5, y:0.35, w:9, h:0.4, fontSize:10, bold:true, color:C.teal, charSpacing:3 });
+  s.addText('Management\nInformation\nSystem Report', { x:0.5, y:1.1, w:6.5, h:3.2, fontSize:44, bold:true, color:C.white, fontFace:'Trebuchet MS', valign:'top' });
+  s.addShape(pres.ShapeType.rect, { x:0.5, y:4.05, w:2.2, h:0.5, fill:{color:C.teal}, line:{color:C.teal} });
+  s.addText(month, { x:0.5, y:4.05, w:2.2, h:0.5, fontSize:13, bold:true, color:C.white, align:'center', valign:'middle' });
+  s.addText('Confidential — For Management Use Only', { x:0.5, y:4.65, w:9, h:0.4, fontSize:10, color:C.slateL, italic:true });
+  const totRev  = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
+  const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
+  const margin  = safeDiv(totEBIT, totRev);
+  const stats = [
+    { label:'Revenue', val:fmt(totRev) },
+    { label:'EBITDA',  val:fmt(totEBIT) },
+    { label:'Margin',  val:fmtPct(margin) },
+  ];
+  stats.forEach((st,i) => {
+    const x=7.5, y=1.3+i*1.32;
+    s.addShape(pres.ShapeType.rect, { x, y, w:2, h:1.1, fill:{color:C.navy}, line:{color:C.teal,width:1} });
+    s.addText(st.val,   { x, y:y+0.08, w:2, h:0.55, fontSize:22, bold:true, color:C.white,    align:'center' });
+    s.addText(st.label, { x, y:y+0.62, w:2, h:0.35, fontSize:10,           color:C.iceBlue,  align:'center' });
+  });
+}
+
+// ── SLIDE: SALES ─────────────────────────────────────────────────────────────
+function buildSales(pres, salesData, month) {
+  const s = pres.addSlide();
+  s.background = { color: C.offWht };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
+  s.addText('Sales & Revenue', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
+  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
+
+  const totRev = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
+  const totTgt = salesData.reduce((a,r)=>a+(parseFloat(r.Target)||0),0);
+  const vsTgt  = safeDiv(totRev - totTgt, totTgt);
+  const maxRev = Math.max(...salesData.map(r=>parseFloat(r.Revenue)||0));
+  const summaries = [
+    { label:'Total Revenue', val:fmt(totRev) },
+    { label:'vs Target',     val:`${vsTgt>=0?'+':''}${vsTgt.toFixed(1)}%` },
+    { label:'Best Month',    val:fmt(maxRev) },
+    { label:'Months',        val:String(salesData.length) },
+  ];
+  summaries.forEach((sm,i) => {
+    const x=0.3+i*2.36;
+    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:2.2, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
+    s.addText(sm.val,   { x, y:0.93, w:2.2, h:0.45, fontSize:18, bold:true, color:C.navy,  align:'center' });
+    s.addText(sm.label, { x, y:1.36, w:2.2, h:0.3,  fontSize:10,           color:C.slate, align:'center' });
+  });
+
+  const hasTarget = salesData.some(r => parseFloat(r.Target) > 0);
+  const chartData = [{ name:'Revenue', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Revenue)||0) }];
+  if (hasTarget) chartData.push({ name:'Target', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Target)||0) });
+
+  s.addChart(pres.ChartType.bar, chartData, {
+    x:0.3, y:1.9, w:6.2, h:3.4, barDir:'col', barGrouping:'clustered',
+    chartColors:[C.teal, C.slateL],
+    chartArea:{ fill:{color:C.white}, roundedCorners:false },
+    catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
+    valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
+    showLegend:hasTarget, legendPos:'b', legendFontSize:10,
+    title:'Monthly Revenue vs Target', showTitle:true, titleFontSize:11, titleColor:C.dark,
+  });
+
+  // Region pie (if region data exists)
+  const hasRegion = salesData.some(r => r.Region && r.Region.trim());
+  if (hasRegion) {
+    const regions = {};
+    salesData.forEach(r => { if (r.Region) regions[r.Region] = (regions[r.Region]||0) + (parseFloat(r.Revenue)||0); });
+    s.addChart(pres.ChartType.pie, [{ name:'Revenue', labels:Object.keys(regions), values:Object.values(regions) }], {
+      x:6.8, y:1.9, w:2.9, h:3.4,
+      chartColors:['028090','1E2761','CADCFC','64748B','16A34A'],
+      chartArea:{ fill:{color:C.white}, roundedCorners:false },
+      showPercent:true, showLegend:true, legendPos:'b', legendFontSize:9,
+      title:'Revenue by Region', showTitle:true, titleFontSize:11, titleColor:C.dark,
+    });
+  }
+}
+
+// ── SLIDE: KPI ────────────────────────────────────────────────────────────────
+function buildKPI(pres, kpiData, month) {
+  const s = pres.addSlide();
+  s.background = { color: C.offWht };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
+  s.addText('KPI Dashboard', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
+  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
+
+  const cols=4, cardW=2.3, cardH=1.9, gapX=0.15, gapY=0.18;
+  const startX=0.25, startY=0.9;
+  const maxCards = Math.min(kpiData.length, 8);
+
+  kpiData.slice(0, maxCards).forEach((row, idx) => {
+    const col=idx%cols, ri=Math.floor(idx/cols);
+    const x=startX+col*(cardW+gapX), y=startY+ri*(cardH+gapY);
+    const clr=kpiColor(row);
+    const pct=safeDiv(parseFloat(row.Actual), parseFloat(row.Target)); // FIX 1 in use
+
+    s.addShape(pres.ShapeType.rect, { x, y, w:cardW, h:cardH, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:5,offset:2,angle:135,opacity:0.09} });
+    s.addShape(pres.ShapeType.rect, { x, y, w:0.06, h:cardH, fill:{color:clr.text}, line:{color:clr.text} });
+
+    s.addText(row.KPI, { x:x+0.12, y:y+0.1, w:cardW-0.2, h:0.38, fontSize:10, bold:true, color:C.dark });
+
+    const unit = row.Unit || '';
+    const valStr = unit==='%' ? `${parseFloat(row.Actual).toFixed(1)}%`
+                 : unit==='$' ? `$${parseFloat(row.Actual).toLocaleString()}`
+                 : `${row.Actual}${unit ? ' '+unit : ''}`;
+    s.addText(valStr, { x:x+0.12, y:y+0.45, w:cardW-0.2, h:0.58, fontSize:26, bold:true, color:clr.text });
+
+    s.addText(`Target: ${row.Target}${unit==='%'?'%':''}`, { x:x+0.12, y:y+1.02, w:cardW-0.2, h:0.28, fontSize:10, color:C.slate });
+
+    s.addShape(pres.ShapeType.rect, { x:x+0.12, y:y+1.35, w:cardW-0.24, h:0.38, fill:{color:clr.bg}, line:{color:clr.text,width:0.5} });
+    s.addText(`${clr.icon} ${pct.toFixed(1)}% of target`, { x:x+0.12, y:y+1.35, w:cardW-0.24, h:0.38, fontSize:9, bold:true, color:clr.text, align:'center', valign:'middle' });
+  });
+}
+
+// ── SLIDE: FINANCE ────────────────────────────────────────────────────────────
+function buildFinance(pres, financeData, month) {
+  const s = pres.addSlide();
+  s.background = { color: C.offWht };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
+  s.addText('Finance — P&L Summary', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
+  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
+
+  const totRev  = financeData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
+  const totCOGS = financeData.reduce((a,r)=>a+(parseFloat(r.COGS)||0),0);
+  const totOpex = financeData.reduce((a,r)=>a+(parseFloat(r.Opex)||0),0);
+  const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
+  const margin  = safeDiv(totEBIT, totRev);
+
+  const cards = [
+    {label:'Revenue',      val:fmt(totRev)},
+    {label:'COGS',         val:fmt(totCOGS)},
+    {label:'Opex',         val:fmt(totOpex)},
+    {label:'EBITDA',       val:fmt(totEBIT)},
+    {label:'EBITDA Margin',val:fmtPct(margin)},
+  ];
+  cards.forEach((c,i) => {
+    const x=0.25+i*1.9;
+    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:1.75, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
+    s.addText(c.val,   { x, y:0.93, w:1.75, h:0.45, fontSize:16, bold:true, color:C.navy,  align:'center' });
+    s.addText(c.label, { x, y:1.36, w:1.75, h:0.3,  fontSize:10,           color:C.slate, align:'center' });
+  });
+
+  // FIX 2: ensure negative EBITDA doesn't get clipped
+  const minEBIT = Math.min(...financeData.map(r=>parseFloat(r.EBITDA)||0));
+  const axisMin = minEBIT < 0 ? Math.floor(minEBIT * 1.2 / 50000) * 50000 : 0;
+
+  s.addChart(pres.ChartType.bar, [
+    {name:'Revenue', labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.Revenue)||0)},
+    {name:'COGS',    labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.COGS)||0)},
+    {name:'Opex',    labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.Opex)||0)},
+    {name:'EBITDA',  labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.EBITDA)||0)},
+  ], {
+    x:0.25, y:1.9, w:6.5, h:3.4, barDir:'col', barGrouping:'clustered',
+    chartColors:[C.teal, C.slateL, 'CADCFC', C.navy],
+    chartArea:{ fill:{color:C.white}, roundedCorners:false },
+    catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
+    valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
+    valAxisMinVal: axisMin, // FIX 2
+    showLegend:true, legendPos:'b', legendFontSize:10,
+    title:'Monthly P&L Breakdown', showTitle:true, titleFontSize:11, titleColor:C.dark,
+  });
+
+  const margins = financeData.map(r => parseFloat(safeDiv(parseFloat(r.EBITDA)||0, parseFloat(r.Revenue)||0).toFixed(1)));
+  s.addChart(pres.ChartType.line, [{
+    name:'EBITDA %', labels:financeData.map(r=>r.Month||''), values:margins
+  }], {
+    x:7.0, y:1.9, w:2.75, h:3.4,
+    chartColors:[C.teal],
+    chartArea:{ fill:{color:C.white}, roundedCorners:false },
+    catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
+    valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
+    lineSize:2.5, lineSmooth:true,
+    showValue:true, dataLabelColor:C.dark, dataLabelFontSize:9,
+    showLegend:false,
+    title:'EBITDA Margin %', showTitle:true, titleFontSize:11, titleColor:C.dark,
+  });
+}
+
+// ── SLIDE: SUMMARY ────────────────────────────────────────────────────────────
+function buildSummary(pres, company, month, salesData, kpiData, financeData) {
+  const s = pres.addSlide();
+  s.background = { color: C.navyDk };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:0.22, h:5.625, fill:{color:C.teal}, line:{color:C.teal} });
+
+  s.addText('Key Takeaways', { x:0.5, y:0.35, w:9, h:0.55, fontSize:28, bold:true, color:C.white, fontFace:'Trebuchet MS' });
+  s.addText(`${company} · ${month}`, { x:0.5, y:0.9, w:9, h:0.35, fontSize:11, color:C.iceBlue, italic:true });
+
+  const totRev  = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
+  const totTgt  = salesData.reduce((a,r)=>a+(parseFloat(r.Target)||0),0);
+  const vsTgt   = safeDiv(totRev - totTgt, totTgt);
+  const bestMonth = salesData.length ? salesData.reduce((a,r)=>(parseFloat(r.Revenue)||0)>(parseFloat(a.Revenue)||0)?r:a).Month : 'N/A';
+  const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
+  const totRevF = financeData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
+  const margin  = safeDiv(totEBIT, totRevF);
+  const greenKPIs = kpiData.filter(r => kpiColor(r).text === C.green).length;
+
+  const takeaways = [
+    { icon:'↑', color:C.teal,
+      head:'Revenue Performance',
+      body:`Total revenue of ${fmt(totRev)} is ${vsTgt>=0?'ahead of':'behind'} target by ${Math.abs(vsTgt).toFixed(1)}%. Strongest month: ${bestMonth}.` },
+    { icon:'$', color:C.green,
+      head:'Profitability',
+      body:`EBITDA of ${fmt(totEBIT)} represents a ${margin.toFixed(1)}% margin. Finance position is ${margin>=18?'healthy':'under pressure — review cost structure'}.` },
+    { icon:'◉', color:C.amber,
+      head:'KPI Health',
+      body:`${greenKPIs} of ${kpiData.length} KPIs are on-target. ${kpiData.length-greenKPIs > 0 ? `${kpiData.length-greenKPIs} metric(s) require management attention.` : 'All KPIs performing well.'}` },
+  ];
+
+  takeaways.forEach((tk,i) => {
+    const y=1.45+i*1.28;
+    s.addShape(pres.ShapeType.rect, { x:0.5, y, w:9, h:1.15, fill:{color:C.navy}, line:{color:tk.color,width:1} });
+    s.addShape(pres.ShapeType.rect, { x:0.5, y, w:0.07, h:1.15, fill:{color:tk.color}, line:{color:tk.color} });
+    s.addText(tk.icon, { x:0.65, y:y+0.08, w:0.6, h:0.45, fontSize:20, bold:true, color:tk.color, align:'center' });
+    s.addText(tk.head, { x:1.2, y:y+0.08, w:8.1, h:0.38, fontSize:13, bold:true, color:C.white });
+    s.addText(tk.body, { x:1.2, y:y+0.52, w:8.1, h:0.55, fontSize:10.5, color:C.iceBlue, wrap:true });
+  });
+
+  s.addText('Confidential · Generated by MIS Deck Generator v2 · For internal use only',
+    { x:0.5, y:5.2, w:9, h:0.3, fontSize:9, color:C.slateL, align:'center', italic:true });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  // default month = current month
+  const now = new Date();
+  document.getElementById('rpt-month').value =
+    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  showPreview('sales');
+});
+</script>
+</body>
+</html>
