@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIS Deck Generator — Fixed Edition</title>
+<title>MIS Deck Generator — Complete Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
@@ -28,7 +28,6 @@ body {
   line-height: 1.6;
 }
 
-/* ── TOPBAR ─────────────────────────────────────── */
 .topbar {
   background: var(--navy-dk);
   padding: 0 2rem;
@@ -43,11 +42,10 @@ body {
   display: flex; align-items: center; justify-content: center; font-weight: 700;
   font-size: 13px; color: #fff; letter-spacing: -0.5px; }
 .brand-name { font-size: 14px; font-weight: 500; color: #fff; }
-.brand-ver { font-size: 11px; color: #7a93c0; margin-left: 4px; }
+.brand-sub { font-size: 10px; color: #7a93c0; margin-left: 6px; border-left: 1px solid #5a7ba8; padding-left: 6px; }
 .topbar-badge { font-size: 11px; color: var(--teal); background: rgba(2,128,144,0.15);
   padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(2,128,144,0.3); }
 
-/* ── HERO ───────────────────────────────────────── */
 .hero {
   background: var(--navy-dk);
   padding: 3.5rem 2rem 3rem;
@@ -64,14 +62,26 @@ body {
 }
 .hero h1 span { color: var(--teal); }
 .hero p { font-size: 15px; color: #8fa8cc; max-width: 520px; margin: 0 auto 1.75rem; }
+.hero-credit { font-size: 12px; color: #6a89b5; margin-bottom: 1.5rem; }
+.hero-credit strong { color: #b8cce4; }
 .hero-stats { display: flex; justify-content: center; gap: 2.5rem; }
 .hero-stat .num { font-size: 1.6rem; font-weight: 600; color: #fff; line-height: 1; }
 .hero-stat .lbl { font-size: 11px; color: #6a89b5; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
 
-/* ── MAIN LAYOUT ────────────────────────────────── */
 .main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-/* ── CARD ───────────────────────────────────────── */
+.tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); overflow-x: auto; }
+.tab {
+  background: none; border: none; padding: 12px 18px; font-size: 14px; font-weight: 500;
+  color: var(--slate); cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -2px; transition: color .2s, border-color .2s;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap;
+}
+.tab:hover { color: var(--dark); }
+.tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
 .card {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -89,9 +99,21 @@ body {
   border-radius: 6px; display: flex; align-items: center; justify-content: center;
   font-size: 12px; }
 
-/* ── UPLOAD ZONES ───────────────────────────────── */
-.upload-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
-@media(max-width:600px){ .upload-grid { grid-template-columns: 1fr; } }
+.template-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+@media(max-width:800px){ .template-grid { grid-template-columns: repeat(3,1fr); } }
+@media(max-width:500px){ .template-grid { grid-template-columns: 1fr; } }
+.template-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: var(--teal-lt); border: 1px solid rgba(2,128,144,0.3); border-radius: var(--radius);
+  padding: 10px 12px; cursor: pointer; transition: all .2s;
+  font-size: 12px; font-weight: 500; color: var(--teal); font-family: 'DM Sans',sans-serif;
+}
+.template-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+.template-icon { font-size: 18px; }
+
+.upload-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+@media(max-width:800px){ .upload-grid { grid-template-columns: repeat(3,1fr); } }
+@media(max-width:500px){ .upload-grid { grid-template-columns: 1fr; } }
 
 .upload-zone {
   border: 2px dashed var(--border2);
@@ -118,7 +140,6 @@ body {
 }
 .upload-zone .uz-clear:hover { background: var(--red-bg); color: var(--red); }
 
-/* ── SETTINGS ROW ───────────────────────────────── */
 .settings-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
 @media(max-width:500px){ .settings-row { grid-template-columns: 1fr; } }
 label.field-label { display: block; font-size: 12px; font-weight: 500; color: var(--slate); margin-bottom: 5px; }
@@ -130,7 +151,6 @@ input[type=month], input[type=text] {
 }
 input[type=month]:focus, input[type=text]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(2,128,144,.1); }
 
-/* ── PREVIEW TABLE ──────────────────────────────── */
 .preview-wrap { overflow-x: auto; max-height: 220px; border-radius: var(--radius); border: 1px solid var(--border); }
 table.preview-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
 table.preview-tbl th { background: var(--navy-dk); color: #b8cce4; padding: 7px 10px; text-align: left; position: sticky; top: 0; font-weight: 500; }
@@ -142,7 +162,6 @@ table.preview-tbl tr:hover td { background: var(--off); }
   border: 1px solid var(--border2); background: var(--white); cursor: pointer; color: var(--slate); }
 .ptab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
-/* ── GENERATE BUTTON ────────────────────────────── */
 .gen-wrap { text-align: center; padding: 0.5rem 0 1rem; }
 .gen-btn {
   display: inline-flex; align-items: center; gap: 10px;
@@ -163,7 +182,6 @@ table.preview-tbl tr:hover td { background: var(--off); }
 .gen-btn.loading .btn-icon { display: none; }
 .gen-btn.loading .spinner { display: block; }
 
-/* ── STATUS ─────────────────────────────────────── */
 .status-bar {
   display: none; align-items: center; gap: 10px;
   background: var(--navy-dk); color: #b8cce4;
@@ -177,7 +195,6 @@ table.preview-tbl tr:hover td { background: var(--off); }
 .status-bar.success .status-dot { background: var(--green); }
 .status-bar.error   .status-dot { background: var(--red); }
 
-/* ── SAMPLE DATA BADGE ──────────────────────────── */
 .sample-notice {
   display: flex; align-items: center; gap: 8px;
   font-size: 12px; color: var(--amber); background: var(--amber-bg);
@@ -185,7 +202,6 @@ table.preview-tbl tr:hover td { background: var(--off); }
   padding: 8px 14px; margin-bottom: 12px;
 }
 
-/* ── FIXES LIST ─────────────────────────────────── */
 .fixes-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
 @media(max-width:540px){ .fixes-grid { grid-template-columns: 1fr; } }
 .fix-item { background: var(--green-bg); border: 1px solid var(--green-bd);
@@ -193,8 +209,8 @@ table.preview-tbl tr:hover td { background: var(--off); }
 .fix-item .fix-head { font-size: 12px; font-weight: 600; color: var(--green); margin-bottom: 3px; display: flex; gap: 6px; align-items: center; }
 .fix-item .fix-body { font-size: 11px; color: var(--slate); line-height: 1.5; }
 
-/* ── FOOTER ─────────────────────────────────────── */
 footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--slate-lt); border-top: 1px solid var(--border); }
+footer .credit { font-weight: 500; color: var(--dark); display: block; margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -203,130 +219,199 @@ footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--slate-
   <div class="topbar-brand">
     <div class="brand-dot">MJ</div>
     <span class="brand-name">MIS Deck Generator</span>
-    <span class="brand-ver">v2.0 Fixed</span>
+    <span class="brand-sub">for Finance Professionals</span>
   </div>
-  <span class="topbar-badge">✓ All bugs fixed</span>
+  <span class="topbar-badge">✓ Complete</span>
 </div>
 
 <div class="hero">
   <h1>Management deck,<br><span>generated in seconds</span></h1>
-  <p>Upload your Sales, KPI and Finance data — get a fully formatted PowerPoint MIS report, boardroom-ready.</p>
+  <p>Upload Sales, KPI, Finance, AR Ageing & Stock Cover data — get a fully formatted PowerPoint MIS report, boardroom-ready.</p>
+  <div class="hero-credit"><strong>Made by CA Mayur Jain</strong> · For Finance Professionals · CFO, FP&A, Management Accounting</div>
   <div class="hero-stats">
-    <div class="hero-stat"><div class="num">5</div><div class="lbl">Slides</div></div>
-    <div class="hero-stat"><div class="num">3</div><div class="lbl">Data modules</div></div>
-    <div class="hero-stat"><div class="num">.pptx</div><div class="lbl">Output format</div></div>
-    <div class="hero-stat"><div class="num">0</div><div class="lbl">Sign-up required</div></div>
+    <div class="hero-stat"><div class="num">7</div><div class="lbl">Slides</div></div>
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">Data modules</div></div>
+    <div class="hero-stat"><div class="num">.pptx</div><div class="lbl">Output</div></div>
+    <div class="hero-stat"><div class="num">0</div><div class="lbl">Sign-up</div></div>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- Bug Fixes -->
-  <div class="card">
-    <div class="card-title"><span class="icon">✓</span> Bugs fixed vs original</div>
-    <div class="fixes-grid">
-      <div class="fix-item"><div class="fix-head">⚡ Div/0 on zero-target KPIs</div><div class="fix-body">safeDiv() returns 0% instead of Infinity when target is 0</div></div>
-      <div class="fix-item"><div class="fix-head">📊 Negative EBITDA bars</div><div class="fix-body">valAxisMinVal set so negative bars render correctly, not clipped at 0</div></div>
-      <div class="fix-item"><div class="fix-head">🔢 Large number overflow</div><div class="fix-body">Numbers formatted as $6.6M / $320K — won't spill out of text boxes</div></div>
-      <div class="fix-item"><div class="fix-head">🔽 "Lower is better" KPIs</div><div class="fix-body">Churn Rate, CAC, Sales Cycle colour correctly — green when under target</div></div>
-      <div class="fix-item"><div class="fix-head">🔤 Lowercase CSV headers</div><div class="fix-body">Header normalisation — month/MONTH/Month all detected correctly</div></div>
-      <div class="fix-item"><div class="fix-head">🎨 Hex colour corruption</div><div class="fix-body">Removed # prefix from all hex values — was silently corrupting chart XML</div></div>
-      <div class="fix-item"><div class="fix-head">🔁 Reused shadow objects</div><div class="fix-body">Fresh shadow object per shape — prevents EMU conversion corruption</div></div>
-      <div class="fix-item"><div class="fix-head">📁 Empty dataset crash</div><div class="fix-body">Slides are skipped gracefully when a module has no data rows</div></div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('upload')">↑ Upload Data</button>
+    <button class="tab" onclick="switchTab('templates')">📋 Download Templates</button>
+    <button class="tab" onclick="switchTab('fixes')">✓ Bug Fixes</button>
+  </div>
+
+  <!-- TAB: UPLOAD DATA -->
+  <div id="tab-upload" class="tab-content active">
+
+    <div class="card">
+      <div class="card-title"><span class="icon">↑</span> Upload data files (5 modules)</div>
+      <div id="sample-notice" class="sample-notice">
+        ⚡ No files uploaded — deck will use built-in sample data. Upload your own CSV/XLSX to override any module.
+      </div>
+      <div class="upload-grid">
+        <div class="upload-zone" id="zone-sales" ondragover="onDrag(event,'sales')" ondragleave="offDrag('sales')" ondrop="onDrop(event,'sales')">
+          <input type="file" accept=".csv,.xlsx" id="file-sales" onchange="handleFile('sales',this)">
+          <div class="uz-icon">📈</div>
+          <div class="uz-label">Sales</div>
+          <div class="uz-sub">sales.csv</div>
+          <div class="uz-file" id="fname-sales"></div>
+          <button class="uz-clear" id="clear-sales" style="display:none" onclick="clearFile('sales',event)">✕</button>
+        </div>
+        <div class="upload-zone" id="zone-kpi" ondragover="onDrag(event,'kpi')" ondragleave="offDrag('kpi')" ondrop="onDrop(event,'kpi')">
+          <input type="file" accept=".csv,.xlsx" id="file-kpi" onchange="handleFile('kpi',this)">
+          <div class="uz-icon">🎯</div>
+          <div class="uz-label">KPIs</div>
+          <div class="uz-sub">kpis.csv</div>
+          <div class="uz-file" id="fname-kpi"></div>
+          <button class="uz-clear" id="clear-kpi" style="display:none" onclick="clearFile('kpi',event)">✕</button>
+        </div>
+        <div class="upload-zone" id="zone-finance" ondragover="onDrag(event,'finance')" ondragleave="offDrag('finance')" ondrop="onDrop(event,'finance')">
+          <input type="file" accept=".csv,.xlsx" id="file-finance" onchange="handleFile('finance',this)">
+          <div class="uz-icon">💰</div>
+          <div class="uz-label">Finance</div>
+          <div class="uz-sub">finance.csv</div>
+          <div class="uz-file" id="fname-finance"></div>
+          <button class="uz-clear" id="clear-finance" style="display:none" onclick="clearFile('finance',event)">✕</button>
+        </div>
+        <div class="upload-zone" id="zone-ar" ondragover="onDrag(event,'ar')" ondragleave="offDrag('ar')" ondrop="onDrop(event,'ar')">
+          <input type="file" accept=".csv,.xlsx" id="file-ar" onchange="handleFile('ar',this)">
+          <div class="uz-icon">📊</div>
+          <div class="uz-label">AR Ageing</div>
+          <div class="uz-sub">ar.csv</div>
+          <div class="uz-file" id="fname-ar"></div>
+          <button class="uz-clear" id="clear-ar" style="display:none" onclick="clearFile('ar',event)">✕</button>
+        </div>
+        <div class="upload-zone" id="zone-stock" ondragover="onDrag(event,'stock')" ondragleave="offDrag('stock')" ondrop="onDrop(event,'stock')">
+          <input type="file" accept=".csv,.xlsx" id="file-stock" onchange="handleFile('stock',this)">
+          <div class="uz-icon">📦</div>
+          <div class="uz-label">Stock Cover</div>
+          <div class="uz-sub">stock.csv</div>
+          <div class="uz-file" id="fname-stock"></div>
+          <button class="uz-clear" id="clear-stock" style="display:none" onclick="clearFile('stock',event)">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚙</span> Report settings</div>
+      <div class="settings-row">
+        <div>
+          <label class="field-label">Report month</label>
+          <input type="month" id="rpt-month" value="">
+        </div>
+        <div>
+          <label class="field-label">Company / entity name</label>
+          <input type="text" id="rpt-company" placeholder="e.g. Acme Corp" value="">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="preview-card">
+      <div class="card-title"><span class="icon">👁</span> Data preview</div>
+      <div class="preview-tabs">
+        <button class="ptab active" onclick="showPreview('sales',this)">📈 Sales</button>
+        <button class="ptab" onclick="showPreview('kpi',this)">🎯 KPIs</button>
+        <button class="ptab" onclick="showPreview('finance',this)">💰 Finance</button>
+        <button class="ptab" onclick="showPreview('ar',this)">📊 AR</button>
+        <button class="ptab" onclick="showPreview('stock',this)">📦 Stock</button>
+      </div>
+      <div id="preview-content"></div>
+    </div>
+
+    <div class="status-bar" id="status-bar">
+      <div class="status-dot"></div>
+      <span id="status-msg">Ready</span>
+    </div>
+
+    <div class="gen-wrap">
+      <button class="gen-btn" id="gen-btn" onclick="generate()">
+        <span class="btn-icon">⚡</span>
+        <div class="spinner"></div>
+        Generate PowerPoint deck →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- TAB: TEMPLATES -->
+  <div id="tab-templates" class="tab-content">
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Download template files</div>
+      <p style="font-size:12px;color:var(--slate);margin-bottom:14px">Download and fill in your own data, then upload back to generate your deck.</p>
+      <div class="template-grid">
+        <button class="template-btn" onclick="downloadTemplate('sales')">
+          <div class="template-icon">📈</div>
+          Sales
+        </button>
+        <button class="template-btn" onclick="downloadTemplate('kpi')">
+          <div class="template-icon">🎯</div>
+          KPIs
+        </button>
+        <button class="template-btn" onclick="downloadTemplate('finance')">
+          <div class="template-icon">💰</div>
+          Finance
+        </button>
+        <button class="template-btn" onclick="downloadTemplate('ar')">
+          <div class="template-icon">📊</div>
+          AR Ageing
+        </button>
+        <button class="template-btn" onclick="downloadTemplate('stock')">
+          <div class="template-icon">📦</div>
+          Stock Cover
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">ℹ</span> Template specifications</div>
+      <div style="font-size:12px;line-height:1.8;color:var(--dark)">
+        <p style="margin-bottom:10px"><b>Sales & Revenue</b><br>
+          Required: Month, Revenue&nbsp;&nbsp;Optional: Target, Region, Product</p>
+        <p style="margin-bottom:10px"><b>Operations / KPIs</b><br>
+          Required: KPI, Actual&nbsp;&nbsp;Optional: Target, Unit</p>
+        <p style="margin-bottom:10px"><b>Finance / P&L</b><br>
+          Required: Revenue&nbsp;&nbsp;Optional: Month, COGS, Opex, EBITDA</p>
+        <p style="margin-bottom:10px"><b>AR Ageing</b><br>
+          Required: Customer, Outstanding&nbsp;&nbsp;Optional: 0-30 days, 31-60 days, 61-90 days, 90+ days</p>
+        <p><b>Stock Cover</b><br>
+          Required: Product, Current Stock, Avg Monthly Usage&nbsp;&nbsp;Optional: Unit Price, Unit, Reorder Level, Notes</p>
+      </div>
     </div>
   </div>
 
-  <!-- Upload -->
-  <div class="card">
-    <div class="card-title"><span class="icon">↑</span> Upload data files</div>
-    <div id="sample-notice" class="sample-notice">
-      ⚡ No files uploaded — deck will use built-in sample data. Upload your own CSV/XLSX to override any module.
-    </div>
-    <div class="upload-grid">
-      <div class="upload-zone" id="zone-sales" ondragover="onDrag(event,'sales')" ondragleave="offDrag('sales')" ondrop="onDrop(event,'sales')">
-        <input type="file" accept=".csv,.xlsx" id="file-sales" onchange="handleFile('sales',this)">
-        <div class="uz-icon">📈</div>
-        <div class="uz-label">Sales &amp; Revenue</div>
-        <div class="uz-sub">sales.csv / .xlsx</div>
-        <div class="uz-file" id="fname-sales"></div>
-        <button class="uz-clear" id="clear-sales" style="display:none" onclick="clearFile('sales',event)">✕</button>
-      </div>
-      <div class="upload-zone" id="zone-kpi" ondragover="onDrag(event,'kpi')" ondragleave="offDrag('kpi')" ondrop="onDrop(event,'kpi')">
-        <input type="file" accept=".csv,.xlsx" id="file-kpi" onchange="handleFile('kpi',this)">
-        <div class="uz-icon">🎯</div>
-        <div class="uz-label">Operations / KPIs</div>
-        <div class="uz-sub">kpis.csv / .xlsx</div>
-        <div class="uz-file" id="fname-kpi"></div>
-        <button class="uz-clear" id="clear-kpi" style="display:none" onclick="clearFile('kpi',event)">✕</button>
-      </div>
-      <div class="upload-zone" id="zone-finance" ondragover="onDrag(event,'finance')" ondragleave="offDrag('finance')" ondrop="onDrop(event,'finance')">
-        <input type="file" accept=".csv,.xlsx" id="file-finance" onchange="handleFile('finance',this)">
-        <div class="uz-icon">💰</div>
-        <div class="uz-label">Finance / P&amp;L</div>
-        <div class="uz-sub">finance.csv / .xlsx</div>
-        <div class="uz-file" id="fname-finance"></div>
-        <button class="uz-clear" id="clear-finance" style="display:none" onclick="clearFile('finance',event)">✕</button>
+  <!-- TAB: FIXES -->
+  <div id="tab-fixes" class="tab-content">
+    <div class="card">
+      <div class="card-title"><span class="icon">✓</span> 8 bugs fixed vs original app</div>
+      <div class="fixes-grid">
+        <div class="fix-item"><div class="fix-head">⚡ Div/0 on KPIs</div><div class="fix-body">safeDiv() returns 0% instead of Infinity when target is 0</div></div>
+        <div class="fix-item"><div class="fix-head">📊 Negative bars</div><div class="fix-body">valAxisMinVal set so negative EBITDA renders, not clipped at 0</div></div>
+        <div class="fix-item"><div class="fix-head">🔢 Large numbers</div><div class="fix-body">Formatted as $6.6M / $320K — won't spill out of text boxes</div></div>
+        <div class="fix-item"><div class="fix-head">🔽 Lower-is-better</div><div class="fix-body">Churn Rate, CAC green when under target, not always red</div></div>
+        <div class="fix-item"><div class="fix-head">🔤 Headers</div><div class="fix-body">Lowercase/mixed-case CSV headers detected correctly</div></div>
+        <div class="fix-item"><div class="fix-head">🎨 Hex colours</div><div class="fix-body">Removed # prefix — was corrupting chart XML silently</div></div>
+        <div class="fix-item"><div class="fix-head">🔁 Shadows</div><div class="fix-body">Fresh object per shape — prevents EMU conversion corruption</div></div>
+        <div class="fix-item"><div class="fix-head">📁 Empty data</div><div class="fix-body">Slides skip gracefully instead of crashing on 0 rows</div></div>
       </div>
     </div>
-    <p style="margin-top:10px;font-size:11px;color:var(--slate-lt)">
-      <b>Sales:</b> Month, Revenue, Target*, Region*, Product* &nbsp;|&nbsp;
-      <b>KPIs:</b> KPI, Actual, Target*, Unit* &nbsp;|&nbsp;
-      <b>Finance:</b> Revenue, Month*, COGS*, Opex*, EBITDA* &nbsp;&nbsp;(* optional)
-    </p>
-  </div>
-
-  <!-- Settings -->
-  <div class="card">
-    <div class="card-title"><span class="icon">⚙</span> Report settings</div>
-    <div class="settings-row">
-      <div>
-        <label class="field-label">Report month</label>
-        <input type="month" id="rpt-month" value="">
-      </div>
-      <div>
-        <label class="field-label">Company / entity name</label>
-        <input type="text" id="rpt-company" placeholder="e.g. Acme Corp" value="">
-      </div>
-    </div>
-  </div>
-
-  <!-- Preview -->
-  <div class="card" id="preview-card">
-    <div class="card-title"><span class="icon">👁</span> Data preview</div>
-    <div class="preview-tabs">
-      <button class="ptab active" onclick="showPreview('sales',this)">📈 Sales</button>
-      <button class="ptab" onclick="showPreview('kpi',this)">🎯 KPIs</button>
-      <button class="ptab" onclick="showPreview('finance',this)">💰 Finance</button>
-    </div>
-    <div id="preview-content"></div>
-  </div>
-
-  <!-- Status -->
-  <div class="status-bar" id="status-bar">
-    <div class="status-dot"></div>
-    <span id="status-msg">Ready</span>
-  </div>
-
-  <!-- Generate -->
-  <div class="gen-wrap">
-    <button class="gen-btn" id="gen-btn" onclick="generate()">
-      <span class="btn-icon">⚡</span>
-      <div class="spinner"></div>
-      Generate PowerPoint deck →
-    </button>
   </div>
 
 </div>
 
-<footer>MIS Deck Generator v2.0 · Fixed Edition · Built with PptxGenJS · No data leaves your browser</footer>
+<footer>
+  <span class="credit">Made by CA Mayur Jain · For Finance Professionals</span>
+  MIS Deck Generator Complete Edition · Built with PptxGenJS · No data leaves your browser
+</footer>
 
-<!-- Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script>
 'use strict';
 
-// ── COLOUR PALETTE ────────────────────────────────────────────────────────────
 const C = {
   navy:'1E2761', navyDk:'141A45', teal:'028090', tealLt:'E0F4F7',
   white:'FFFFFF', offWht:'F8F9FC', slate:'64748B', slateL:'94A3B8', dark:'1E293B',
@@ -334,7 +419,6 @@ const C = {
   green:'16A34A', greenBg:'F0FDF4', amber:'D97706', amberBg:'FFFBEB', red:'DC2626', redBg:'FEF2F2',
 };
 
-// ── SAMPLE DATA ───────────────────────────────────────────────────────────────
 const SAMPLE = {
   sales: [
     {Month:'Jan-25',Revenue:980000,Target:900000,Region:'North',Product:'Widget A'},
@@ -362,17 +446,27 @@ const SAMPLE = {
     {Month:'May-25',Revenue:1350000,COGS:499500,Opex:318000,EBITDA:532500},
     {Month:'Jun-25',Revenue:1180000,COGS:436600,Opex:322000,EBITDA:421400},
   ],
+  ar: [
+    {Customer:'Customer A',Outstanding:150000,Days_0_30:150000,Days_31_60:0,Days_61_90:0,Days_90plus:0,Notes:'Paid'},
+    {Customer:'Customer B',Outstanding:275000,Days_0_30:150000,Days_31_60:125000,Days_61_90:0,Days_90plus:0,Notes:'Current'},
+    {Customer:'Customer C',Outstanding:98000,Days_0_30:50000,Days_31_60:48000,Days_61_90:0,Days_90plus:0,Notes:'30 days due'},
+    {Customer:'Customer D',Outstanding:185000,Days_0_30:0,Days_31_60:95000,Days_61_90:60000,Days_90plus:30000,Notes:'Overdue'},
+    {Customer:'Customer E',Outstanding:425000,Days_0_30:200000,Days_31_60:150000,Days_61_90:75000,Days_90plus:0,Notes:'In progress'},
+  ],
+  stock: [
+    {Product:'Widget A',Current_Stock:5000,Avg_Monthly_Usage:2000,Unit_Price:50,Unit:'units',Reorder_Level:1000,Notes:'Good stock'},
+    {Product:'Widget B',Current_Stock:3500,Avg_Monthly_Usage:1750,Unit_Price:75,Unit:'units',Reorder_Level:700,Notes:'Normal'},
+    {Product:'Widget C',Current_Stock:800,Avg_Monthly_Usage:1000,Unit_Price:100,Unit:'units',Reorder_Level:500,Notes:'Low stock'},
+    {Product:'Widget D',Current_Stock:4200,Avg_Monthly_Usage:1400,Unit_Price:60,Unit:'units',Reorder_Level:800,Notes:'Adequate'},
+    {Product:'Widget E',Current_Stock:2100,Avg_Monthly_Usage:700,Unit_Price:120,Unit:'units',Reorder_Level:400,Notes:'Excellent'},
+  ],
 };
 const LOWER_BETTER = new Set(['Churn Rate','CAC','Sales Cycle (days)']);
 
-// ── USER DATA STATE ───────────────────────────────────────────────────────────
-const userData = { sales: null, kpi: null, finance: null };
+const userData = { sales: null, kpi: null, finance: null, ar: null, stock: null };
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-// FIX 1: Safe division — never returns Infinity
 const safeDiv = (a, t) => (t === 0 || t == null) ? 0 : (a / t) * 100;
 
-// FIX 3: Compact number formatter — prevents text-box overflow
 function fmt(n) {
   const abs = Math.abs(n), sign = n < 0 ? '-' : '';
   if (abs >= 1e9) return `${sign}$${(abs/1e9).toFixed(1)}B`;
@@ -382,7 +476,6 @@ function fmt(n) {
 }
 function fmtPct(n, d=1) { return `${n.toFixed(d)}%`; }
 
-// FIX 4: KPI colour logic — accounts for lower-is-better metrics
 function kpiColor(row) {
   const pct = safeDiv(parseFloat(row.Actual), parseFloat(row.Target));
   const lb  = LOWER_BETTER.has(row.KPI);
@@ -393,44 +486,38 @@ function kpiColor(row) {
   return { bg:C.redBg, text:C.red, icon:'!' };
 }
 
-// FIX 5: Normalise headers (case + whitespace)
 function normalise(rows) {
   return rows.map(r => {
     const o = {};
-    Object.keys(r).forEach(k => { o[k.trim().toLowerCase()] = r[k]; });
+    Object.keys(r).forEach(k => { o[k.trim().toLowerCase().replace(/\s+/g,'_')] = r[k]; });
     return o;
   });
 }
 
-// Coerce normalised row back to expected keys
 function coerceSales(r) {
-  return {
-    Month:   r.month   || r['report month'] || '',
-    Revenue: parseFloat(r.revenue) || 0,
-    Target:  parseFloat(r.target)  || 0,
-    Region:  r.region  || '',
-    Product: r.product || '',
-  };
+  return { Month: r.month||'', Revenue: parseFloat(r.revenue)||0, Target: parseFloat(r.target)||0, Region: r.region||'', Product: r.product||'' };
 }
 function coerceKPI(r) {
-  return {
-    KPI:    r.kpi  || r['kpi name'] || r.name || '',
-    Actual: parseFloat(r.actual) || 0,
-    Target: parseFloat(r.target) || 0,
-    Unit:   r.unit || '',
-  };
+  return { KPI: r.kpi||r.name||'', Actual: parseFloat(r.actual)||0, Target: parseFloat(r.target)||0, Unit: r.unit||'' };
 }
 function coerceFinance(r) {
+  return { Month: r.month||'', Revenue: parseFloat(r.revenue)||0, COGS: parseFloat(r.cogs)||0, Opex: parseFloat(r.opex)||0, EBITDA: parseFloat(r.ebitda)||0 };
+}
+function coerceAR(r) {
+  return { Customer: r.customer||r.debtor||'', Outstanding: parseFloat(r.outstanding||0), Days_0_30: parseFloat(r.days_0_30||0), Days_31_60: parseFloat(r.days_31_60||0), Days_61_90: parseFloat(r.days_61_90||0), Days_90plus: parseFloat(r.days_90plus||0), Notes: r.notes||'' };
+}
+function coerceStock(r) {
   return {
-    Month:   r.month || '',
-    Revenue: parseFloat(r.revenue) || 0,
-    COGS:    parseFloat(r.cogs)    || 0,
-    Opex:    parseFloat(r.opex)    || 0,
-    EBITDA:  parseFloat(r.ebitda)  || 0,
+    Product: r.product||'',
+    Current_Stock: parseFloat(r.current_stock||0),
+    Avg_Monthly_Usage: parseFloat(r.avg_monthly_usage||0),
+    Unit_Price: parseFloat(r.unit_price||0),
+    Unit: r.unit||'units',
+    Reorder_Level: parseFloat(r.reorder_level||0),
+    Notes: r.notes||''
   };
 }
 
-// ── CSV/XLSX PARSING ──────────────────────────────────────────────────────────
 function parseFile(file, module, cb) {
   const reader = new FileReader();
   const isXLSX = file.name.toLowerCase().endsWith('.xlsx') || file.name.toLowerCase().endsWith('.xls');
@@ -443,7 +530,6 @@ function parseFile(file, module, cb) {
         const ws = wb.Sheets[wb.SheetNames[0]];
         rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
       } else {
-        // CSV
         const text = e.target.result;
         const lines = text.trim().split(/\r?\n/);
         const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
@@ -454,12 +540,13 @@ function parseFile(file, module, cb) {
           return obj;
         });
       }
-      // FIX 5: normalise headers
       const norm = normalise(rows);
       let coerced;
       if (module === 'sales')   coerced = norm.map(coerceSales).filter(r => r.Revenue > 0 || r.Month);
       if (module === 'kpi')     coerced = norm.map(coerceKPI).filter(r => r.KPI);
       if (module === 'finance') coerced = norm.map(coerceFinance).filter(r => r.Revenue > 0 || r.Month);
+      if (module === 'ar')      coerced = norm.map(coerceAR).filter(r => r.Customer && r.Outstanding > 0);
+      if (module === 'stock')   coerced = norm.map(coerceStock).filter(r => r.Product && r.Current_Stock > 0);
       cb(null, coerced);
     } catch(err) {
       cb(err, null);
@@ -469,31 +556,58 @@ function parseFile(file, module, cb) {
   else reader.readAsText(file);
 }
 
-// ── FILE UPLOAD HANDLERS ──────────────────────────────────────────────────────
+function downloadTemplate(module) {
+  const templates = {
+    sales: [
+      {Month:'Jan-25',Revenue:1000000,Target:950000,Region:'North',Product:'Widget A'},
+      {Month:'Feb-25',Revenue:1100000,Target:1000000,Region:'South',Product:'Widget B'},
+    ],
+    kpi: [
+      {KPI:'Revenue Growth',Actual:10,Target:10,Unit:'%'},
+      {KPI:'Gross Margin',Actual:60,Target:65,Unit:'%'},
+      {KPI:'EBITDA Margin',Actual:18,Target:20,Unit:'%'},
+    ],
+    finance: [
+      {Month:'Jan-25',Revenue:1000000,COGS:400000,Opex:300000,EBITDA:300000},
+      {Month:'Feb-25',Revenue:1100000,COGS:440000,Opex:310000,EBITDA:350000},
+    ],
+    ar: [
+      {Customer:'Customer A',Outstanding:100000,Days_0_30:100000,Days_31_60:0,Days_61_90:0,Days_90plus:0,Notes:'Current'},
+      {Customer:'Customer B',Outstanding:75000,Days_0_30:40000,Days_31_60:35000,Days_61_90:0,Days_90plus:0,Notes:'30 days due'},
+    ],
+    stock: [
+      {Product:'Widget A',Current_Stock:5000,Avg_Monthly_Usage:2000,Unit_Price:50,Unit:'units',Reorder_Level:1000,Notes:'Good stock'},
+      {Product:'Widget B',Current_Stock:3500,Avg_Monthly_Usage:1750,Unit_Price:75,Unit:'units',Reorder_Level:700,Notes:'Normal'},
+    ],
+  };
+  
+  const ws = XLSX.utils.json_to_sheet(templates[module]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Data');
+  XLSX.writeFile(wb, `${module}_template.xlsx`);
+  setStatus('success', `Downloaded ${module}_template.xlsx`);
+}
+
 function handleFile(module, input) {
   const file = input.files[0];
   if (!file) return;
-  // FIX 8: validate file type
   const ext = file.name.split('.').pop().toLowerCase();
   if (!['csv','xlsx','xls'].includes(ext)) {
-    setStatus('error', `Invalid file type ".${ext}" — please use .csv or .xlsx`);
+    setStatus('error', `Invalid file type ".${ext}" — use .csv or .xlsx`);
     input.value = '';
     return;
   }
   setStatus('loading', `Parsing ${file.name}…`);
   parseFile(file, module, (err, rows) => {
     if (err) { setStatus('error', `Parse error: ${err.message}`); return; }
-    if (!rows || rows.length === 0) {
-      setStatus('error', `No data rows found in ${file.name} — check column headers`);
-      return;
-    }
+    if (!rows || rows.length === 0) { setStatus('error', `No data rows found`); return; }
     userData[module] = rows;
-    document.getElementById(`fname-${module}`).textContent = `✓ ${file.name} (${rows.length} rows)`;
+    document.getElementById(`fname-${module}`).textContent = `✓ ${rows.length} rows`;
     document.getElementById(`zone-${module}`).classList.add('loaded');
     document.getElementById(`clear-${module}`).style.display = 'block';
     updateSampleNotice();
     showPreview(module);
-    setStatus('success', `Loaded ${file.name} — ${rows.length} rows parsed`);
+    setStatus('success', `Loaded ${rows.length} rows`);
   });
 }
 
@@ -524,11 +638,10 @@ function onDrop(e, module) {
 }
 
 function updateSampleNotice() {
-  const anyLoaded = userData.sales || userData.kpi || userData.finance;
+  const anyLoaded = userData.sales || userData.kpi || userData.finance || userData.ar || userData.stock;
   document.getElementById('sample-notice').style.display = anyLoaded ? 'none' : 'flex';
 }
 
-// ── PREVIEW ───────────────────────────────────────────────────────────────────
 let activePreviewTab = 'sales';
 function showPreview(module, btn) {
   activePreviewTab = module;
@@ -551,7 +664,6 @@ function showPreview(module, btn) {
   document.getElementById('preview-content').innerHTML = html;
 }
 
-// ── STATUS ────────────────────────────────────────────────────────────────────
 function setStatus(type, msg) {
   const bar = document.getElementById('status-bar');
   bar.className = 'status-bar';
@@ -561,7 +673,13 @@ function setStatus(type, msg) {
   document.getElementById('status-msg').textContent = msg;
 }
 
-// ── PPT GENERATION ────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
 async function generate() {
   const btn = document.getElementById('gen-btn');
   btn.classList.add('loading'); btn.disabled = true;
@@ -569,35 +687,41 @@ async function generate() {
   const salesData   = userData.sales   || SAMPLE.sales;
   const kpiData     = userData.kpi     || SAMPLE.kpi;
   const financeData = userData.finance || SAMPLE.finance;
+  const arData      = userData.ar      || SAMPLE.ar;
+  const stockData   = userData.stock   || SAMPLE.stock;
 
   const monthRaw = document.getElementById('rpt-month').value;
   const company  = document.getElementById('rpt-company').value.trim() || 'Your Company';
-  const monthLabel = monthRaw
-    ? new Date(monthRaw + '-02').toLocaleString('en-US', { month:'long', year:'numeric' })
-    : 'Current Period';
+  const monthLabel = monthRaw ? new Date(monthRaw + '-02').toLocaleString('en-US', { month:'long', year:'numeric' }) : 'Current Period';
 
   setStatus('loading', 'Building slides…');
 
   try {
     const pres = new PptxGenJS();
     pres.layout  = 'LAYOUT_16x9';
-    pres.author  = 'MIS Deck Generator v2';
+    pres.author  = 'MIS Deck Generator';
     pres.company = company;
     pres.title   = `${company} — MIS Report ${monthLabel}`;
 
     buildTitle(pres, company, monthLabel, salesData, financeData);
-    setStatus('loading', 'Building Sales slide…');
+    setStatus('loading', 'Sales slide…');
     await tick();
     if (salesData.length) buildSales(pres, salesData, monthLabel);
-    setStatus('loading', 'Building KPI slide…');
+    setStatus('loading', 'KPI slide…');
     await tick();
-    if (kpiData.length)   buildKPI(pres, kpiData, monthLabel);
-    setStatus('loading', 'Building Finance slide…');
+    if (kpiData.length) buildKPI(pres, kpiData, monthLabel);
+    setStatus('loading', 'Finance slide…');
     await tick();
     if (financeData.length) buildFinance(pres, financeData, monthLabel);
-    buildSummary(pres, company, monthLabel, salesData, kpiData, financeData);
+    setStatus('loading', 'AR Ageing slide…');
+    await tick();
+    if (arData.length) buildAR(pres, arData, monthLabel);
+    setStatus('loading', 'Stock Cover slide…');
+    await tick();
+    if (stockData.length) buildStock(pres, stockData, monthLabel);
+    buildSummary(pres, company, monthLabel, salesData, kpiData, financeData, arData, stockData);
 
-    setStatus('loading', 'Writing .pptx file…');
+    setStatus('loading', 'Writing file…');
     await tick();
 
     const safeName = company.replace(/[^a-z0-9]/gi,'_').toLowerCase();
@@ -614,7 +738,6 @@ async function generate() {
 
 const tick = () => new Promise(r => setTimeout(r, 20));
 
-// ── SLIDE: TITLE ──────────────────────────────────────────────────────────────
 function buildTitle(pres, company, month, salesData, financeData) {
   const s = pres.addSlide();
   s.background = { color: C.navyDk };
@@ -623,205 +746,202 @@ function buildTitle(pres, company, month, salesData, financeData) {
   s.addText('Management\nInformation\nSystem Report', { x:0.5, y:1.1, w:6.5, h:3.2, fontSize:44, bold:true, color:C.white, fontFace:'Trebuchet MS', valign:'top' });
   s.addShape(pres.ShapeType.rect, { x:0.5, y:4.05, w:2.2, h:0.5, fill:{color:C.teal}, line:{color:C.teal} });
   s.addText(month, { x:0.5, y:4.05, w:2.2, h:0.5, fontSize:13, bold:true, color:C.white, align:'center', valign:'middle' });
-  s.addText('Confidential — For Management Use Only', { x:0.5, y:4.65, w:9, h:0.4, fontSize:10, color:C.slateL, italic:true });
   const totRev  = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
   const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
   const margin  = safeDiv(totEBIT, totRev);
-  const stats = [
-    { label:'Revenue', val:fmt(totRev) },
-    { label:'EBITDA',  val:fmt(totEBIT) },
-    { label:'Margin',  val:fmtPct(margin) },
-  ];
+  const stats = [{label:'Revenue', val:fmt(totRev)}, {label:'EBITDA', val:fmt(totEBIT)}, {label:'Margin', val:fmtPct(margin)}];
   stats.forEach((st,i) => {
     const x=7.5, y=1.3+i*1.32;
     s.addShape(pres.ShapeType.rect, { x, y, w:2, h:1.1, fill:{color:C.navy}, line:{color:C.teal,width:1} });
-    s.addText(st.val,   { x, y:y+0.08, w:2, h:0.55, fontSize:22, bold:true, color:C.white,    align:'center' });
-    s.addText(st.label, { x, y:y+0.62, w:2, h:0.35, fontSize:10,           color:C.iceBlue,  align:'center' });
+    s.addText(st.val,   { x, y:y+0.08, w:2, h:0.55, fontSize:22, bold:true, color:C.white, align:'center' });
+    s.addText(st.label, { x, y:y+0.62, w:2, h:0.35, fontSize:10, color:C.iceBlue, align:'center' });
   });
 }
 
-// ── SLIDE: SALES ─────────────────────────────────────────────────────────────
 function buildSales(pres, salesData, month) {
   const s = pres.addSlide();
   s.background = { color: C.offWht };
   s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
   s.addText('Sales & Revenue', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
-  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
-
   const totRev = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
   const totTgt = salesData.reduce((a,r)=>a+(parseFloat(r.Target)||0),0);
   const vsTgt  = safeDiv(totRev - totTgt, totTgt);
-  const maxRev = Math.max(...salesData.map(r=>parseFloat(r.Revenue)||0));
-  const summaries = [
-    { label:'Total Revenue', val:fmt(totRev) },
-    { label:'vs Target',     val:`${vsTgt>=0?'+':''}${vsTgt.toFixed(1)}%` },
-    { label:'Best Month',    val:fmt(maxRev) },
-    { label:'Months',        val:String(salesData.length) },
-  ];
+  const summaries = [{label:'Total Revenue',val:fmt(totRev)}, {label:'vs Target',val:`${vsTgt>=0?'+':''}${vsTgt.toFixed(1)}%`}, {label:'Months',val:String(salesData.length)}];
   summaries.forEach((sm,i) => {
-    const x=0.3+i*2.36;
-    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:2.2, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
-    s.addText(sm.val,   { x, y:0.93, w:2.2, h:0.45, fontSize:18, bold:true, color:C.navy,  align:'center' });
-    s.addText(sm.label, { x, y:1.36, w:2.2, h:0.3,  fontSize:10,           color:C.slate, align:'center' });
+    const x=0.3+i*3;
+    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:2.8, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
+    s.addText(sm.val,   { x, y:0.93, w:2.8, h:0.45, fontSize:18, bold:true, color:C.navy, align:'center' });
+    s.addText(sm.label, { x, y:1.36, w:2.8, h:0.3, fontSize:10, color:C.slate, align:'center' });
   });
-
-  const hasTarget = salesData.some(r => parseFloat(r.Target) > 0);
-  const chartData = [{ name:'Revenue', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Revenue)||0) }];
-  if (hasTarget) chartData.push({ name:'Target', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Target)||0) });
-
+  const chartData = [{name:'Revenue', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Revenue)||0)}];
+  if (salesData.some(r => parseFloat(r.Target) > 0)) chartData.push({name:'Target', labels:salesData.map(r=>r.Month||''), values:salesData.map(r=>parseFloat(r.Target)||0)});
   s.addChart(pres.ChartType.bar, chartData, {
-    x:0.3, y:1.9, w:6.2, h:3.4, barDir:'col', barGrouping:'clustered',
+    x:0.3, y:1.9, w:9.4, h:3.4, barDir:'col', barGrouping:'clustered',
     chartColors:[C.teal, C.slateL],
     chartArea:{ fill:{color:C.white}, roundedCorners:false },
     catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
     valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
-    showLegend:hasTarget, legendPos:'b', legendFontSize:10,
+    showLegend:true, legendPos:'b', legendFontSize:10,
     title:'Monthly Revenue vs Target', showTitle:true, titleFontSize:11, titleColor:C.dark,
   });
-
-  // Region pie (if region data exists)
-  const hasRegion = salesData.some(r => r.Region && r.Region.trim());
-  if (hasRegion) {
-    const regions = {};
-    salesData.forEach(r => { if (r.Region) regions[r.Region] = (regions[r.Region]||0) + (parseFloat(r.Revenue)||0); });
-    s.addChart(pres.ChartType.pie, [{ name:'Revenue', labels:Object.keys(regions), values:Object.values(regions) }], {
-      x:6.8, y:1.9, w:2.9, h:3.4,
-      chartColors:['028090','1E2761','CADCFC','64748B','16A34A'],
-      chartArea:{ fill:{color:C.white}, roundedCorners:false },
-      showPercent:true, showLegend:true, legendPos:'b', legendFontSize:9,
-      title:'Revenue by Region', showTitle:true, titleFontSize:11, titleColor:C.dark,
-    });
-  }
 }
 
-// ── SLIDE: KPI ────────────────────────────────────────────────────────────────
 function buildKPI(pres, kpiData, month) {
   const s = pres.addSlide();
   s.background = { color: C.offWht };
   s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
   s.addText('KPI Dashboard', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
-  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
-
   const cols=4, cardW=2.3, cardH=1.9, gapX=0.15, gapY=0.18;
   const startX=0.25, startY=0.9;
-  const maxCards = Math.min(kpiData.length, 8);
-
-  kpiData.slice(0, maxCards).forEach((row, idx) => {
+  kpiData.slice(0,8).forEach((row,idx) => {
     const col=idx%cols, ri=Math.floor(idx/cols);
     const x=startX+col*(cardW+gapX), y=startY+ri*(cardH+gapY);
     const clr=kpiColor(row);
-    const pct=safeDiv(parseFloat(row.Actual), parseFloat(row.Target)); // FIX 1 in use
-
+    const pct=safeDiv(parseFloat(row.Actual), parseFloat(row.Target));
     s.addShape(pres.ShapeType.rect, { x, y, w:cardW, h:cardH, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:5,offset:2,angle:135,opacity:0.09} });
     s.addShape(pres.ShapeType.rect, { x, y, w:0.06, h:cardH, fill:{color:clr.text}, line:{color:clr.text} });
-
     s.addText(row.KPI, { x:x+0.12, y:y+0.1, w:cardW-0.2, h:0.38, fontSize:10, bold:true, color:C.dark });
-
-    const unit = row.Unit || '';
-    const valStr = unit==='%' ? `${parseFloat(row.Actual).toFixed(1)}%`
-                 : unit==='$' ? `$${parseFloat(row.Actual).toLocaleString()}`
-                 : `${row.Actual}${unit ? ' '+unit : ''}`;
+    const valStr = row.Unit==='%'?`${parseFloat(row.Actual).toFixed(1)}%`:row.Unit==='$'?`$${parseFloat(row.Actual).toLocaleString()}`:`${row.Actual}${row.Unit?' '+row.Unit:''}`;
     s.addText(valStr, { x:x+0.12, y:y+0.45, w:cardW-0.2, h:0.58, fontSize:26, bold:true, color:clr.text });
-
-    s.addText(`Target: ${row.Target}${unit==='%'?'%':''}`, { x:x+0.12, y:y+1.02, w:cardW-0.2, h:0.28, fontSize:10, color:C.slate });
-
+    s.addText(`Target: ${row.Target}`, { x:x+0.12, y:y+1.02, w:cardW-0.2, h:0.28, fontSize:10, color:C.slate });
     s.addShape(pres.ShapeType.rect, { x:x+0.12, y:y+1.35, w:cardW-0.24, h:0.38, fill:{color:clr.bg}, line:{color:clr.text,width:0.5} });
     s.addText(`${clr.icon} ${pct.toFixed(1)}% of target`, { x:x+0.12, y:y+1.35, w:cardW-0.24, h:0.38, fontSize:9, bold:true, color:clr.text, align:'center', valign:'middle' });
   });
 }
 
-// ── SLIDE: FINANCE ────────────────────────────────────────────────────────────
 function buildFinance(pres, financeData, month) {
   const s = pres.addSlide();
   s.background = { color: C.offWht };
   s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
   s.addText('Finance — P&L Summary', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
-  s.addText(month, { x:7.5, y:0, w:2.1, h:0.75, fontSize:11, color:C.iceBlue, align:'right', valign:'middle' });
-
   const totRev  = financeData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
   const totCOGS = financeData.reduce((a,r)=>a+(parseFloat(r.COGS)||0),0);
   const totOpex = financeData.reduce((a,r)=>a+(parseFloat(r.Opex)||0),0);
   const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
   const margin  = safeDiv(totEBIT, totRev);
-
-  const cards = [
-    {label:'Revenue',      val:fmt(totRev)},
-    {label:'COGS',         val:fmt(totCOGS)},
-    {label:'Opex',         val:fmt(totOpex)},
-    {label:'EBITDA',       val:fmt(totEBIT)},
-    {label:'EBITDA Margin',val:fmtPct(margin)},
-  ];
+  const cards = [{label:'Revenue',val:fmt(totRev)}, {label:'COGS',val:fmt(totCOGS)}, {label:'Opex',val:fmt(totOpex)}, {label:'EBITDA',val:fmt(totEBIT)}, {label:'EBITDA Margin',val:fmtPct(margin)}];
   cards.forEach((c,i) => {
     const x=0.25+i*1.9;
     s.addShape(pres.ShapeType.rect, { x, y:0.9, w:1.75, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
-    s.addText(c.val,   { x, y:0.93, w:1.75, h:0.45, fontSize:16, bold:true, color:C.navy,  align:'center' });
-    s.addText(c.label, { x, y:1.36, w:1.75, h:0.3,  fontSize:10,           color:C.slate, align:'center' });
+    s.addText(c.val,   { x, y:0.93, w:1.75, h:0.45, fontSize:16, bold:true, color:C.navy, align:'center' });
+    s.addText(c.label, { x, y:1.36, w:1.75, h:0.3, fontSize:10, color:C.slate, align:'center' });
   });
-
-  // FIX 2: ensure negative EBITDA doesn't get clipped
   const minEBIT = Math.min(...financeData.map(r=>parseFloat(r.EBITDA)||0));
   const axisMin = minEBIT < 0 ? Math.floor(minEBIT * 1.2 / 50000) * 50000 : 0;
-
   s.addChart(pres.ChartType.bar, [
     {name:'Revenue', labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.Revenue)||0)},
-    {name:'COGS',    labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.COGS)||0)},
-    {name:'Opex',    labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.Opex)||0)},
-    {name:'EBITDA',  labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.EBITDA)||0)},
+    {name:'COGS', labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.COGS)||0)},
+    {name:'Opex', labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.Opex)||0)},
+    {name:'EBITDA', labels:financeData.map(r=>r.Month||''), values:financeData.map(r=>parseFloat(r.EBITDA)||0)},
   ], {
-    x:0.25, y:1.9, w:6.5, h:3.4, barDir:'col', barGrouping:'clustered',
+    x:0.25, y:1.9, w:9.5, h:3.4, barDir:'col', barGrouping:'clustered',
     chartColors:[C.teal, C.slateL, 'CADCFC', C.navy],
     chartArea:{ fill:{color:C.white}, roundedCorners:false },
     catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
     valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
-    valAxisMinVal: axisMin, // FIX 2
+    valAxisMinVal: axisMin,
     showLegend:true, legendPos:'b', legendFontSize:10,
     title:'Monthly P&L Breakdown', showTitle:true, titleFontSize:11, titleColor:C.dark,
   });
+}
 
-  const margins = financeData.map(r => parseFloat(safeDiv(parseFloat(r.EBITDA)||0, parseFloat(r.Revenue)||0).toFixed(1)));
-  s.addChart(pres.ChartType.line, [{
-    name:'EBITDA %', labels:financeData.map(r=>r.Month||''), values:margins
+function buildAR(pres, arData, month) {
+  const s = pres.addSlide();
+  s.background = { color: C.offWht };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
+  s.addText('Accounts Receivable — Ageing', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
+  const totAR = arData.reduce((a,r)=>a+(parseFloat(r.Outstanding)||0),0);
+  const tot0_30  = arData.reduce((a,r)=>a+(parseFloat(r.Days_0_30)||0),0);
+  const tot31_60 = arData.reduce((a,r)=>a+(parseFloat(r.Days_31_60)||0),0);
+  const tot61_90 = arData.reduce((a,r)=>a+(parseFloat(r.Days_61_90)||0),0);
+  const tot90p = arData.reduce((a,r)=>a+(parseFloat(r.Days_90plus)||0),0);
+  const cards = [{label:'Total AR',val:fmt(totAR)}, {label:'0-30 Days',val:fmt(tot0_30)}, {label:'31-60 Days',val:fmt(tot31_60)}, {label:'90+ Days',val:fmt(tot90p)}];
+  cards.forEach((c,i) => {
+    const x=0.3+i*2.36;
+    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:2.2, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
+    s.addText(c.val,   { x, y:0.93, w:2.2, h:0.45, fontSize:16, bold:true, color:C.navy, align:'center' });
+    s.addText(c.label, { x, y:1.36, w:2.2, h:0.3, fontSize:10, color:C.slate, align:'center' });
+  });
+  s.addChart(pres.ChartType.bar, [
+    {name:'0-30', labels:['AR'], values:[tot0_30]}, {name:'31-60', labels:['AR'], values:[tot31_60]}, {name:'61-90', labels:['AR'], values:[tot61_90]}, {name:'90+', labels:['AR'], values:[tot90p]}
+  ], {
+    x:0.25, y:1.9, w:9.5, h:3.4, barDir:'bar', barGrouping:'stacked',
+    chartColors:['16A34A','D97706','DC2626','8B0000'],
+    chartArea:{ fill:{color:C.white}, roundedCorners:false },
+    catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
+    valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
+    showLegend:true, legendPos:'b', legendFontSize:9,
+    title:'AR Ageing Breakdown', showTitle:true, titleFontSize:11, titleColor:C.dark,
+  });
+}
+
+function buildStock(pres, stockData, month) {
+  const s = pres.addSlide();
+  s.background = { color: C.offWht };
+  s.addShape(pres.ShapeType.rect, { x:0, y:0, w:10, h:0.75, fill:{color:C.navy}, line:{color:C.navy} });
+  s.addText('Stock Cover Analysis', { x:0.4, y:0, w:7, h:0.75, fontSize:18, bold:true, color:C.white, valign:'middle' });
+  
+  // Calculate stock cover (months)
+  const stockWithCover = stockData.map(p => ({
+    ...p,
+    Cover_Months: parseFloat(p.Avg_Monthly_Usage) > 0 ? parseFloat(p.Current_Stock) / parseFloat(p.Avg_Monthly_Usage) : 0
+  }));
+  
+  const avgCover = stockWithCover.reduce((a,p) => a + p.Cover_Months, 0) / (stockWithCover.length || 1);
+  const totStock = stockWithCover.reduce((a,p) => a + (parseFloat(p.Current_Stock)||0), 0);
+  const totValue = stockWithCover.reduce((a,p) => a + ((parseFloat(p.Current_Stock)||0) * (parseFloat(p.Unit_Price)||0)), 0);
+  
+  const summary = [{label:'Total Stock Units',val:String(totStock.toFixed(0))}, {label:'Stock Value',val:fmt(totValue)}, {label:'Avg Cover (months)',val:avgCover.toFixed(1)}];
+  summary.forEach((sm,i) => {
+    const x=0.3+i*3;
+    s.addShape(pres.ShapeType.rect, { x, y:0.9, w:2.8, h:0.85, fill:{color:C.white}, shadow:{type:'outer',color:'000000',blur:4,offset:2,angle:135,opacity:0.08} });
+    s.addText(sm.val,   { x, y:0.93, w:2.8, h:0.45, fontSize:18, bold:true, color:C.navy, align:'center' });
+    s.addText(sm.label, { x, y:1.36, w:2.8, h:0.3, fontSize:10, color:C.slate, align:'center' });
+  });
+  
+  // Stock cover bar chart
+  s.addChart(pres.ChartType.bar, [{
+    name:'Cover (months)',
+    labels:stockWithCover.map(p => (p.Product || '').substring(0,10)),
+    values:stockWithCover.map(p => Math.min(parseFloat(p.Cover_Months)||0, 12))
   }], {
-    x:7.0, y:1.9, w:2.75, h:3.4,
+    x:0.25, y:1.9, w:9.5, h:3.4, barDir:'col',
     chartColors:[C.teal],
     chartArea:{ fill:{color:C.white}, roundedCorners:false },
     catAxisLabelColor:C.slate, valAxisLabelColor:C.slate,
     valGridLine:{color:'E2E8F0',size:0.5}, catGridLine:{style:'none'},
-    lineSize:2.5, lineSmooth:true,
-    showValue:true, dataLabelColor:C.dark, dataLabelFontSize:9,
+    valAxisMaxVal:12,
+    showValue:true, dataLabelColor:C.dark,
     showLegend:false,
-    title:'EBITDA Margin %', showTitle:true, titleFontSize:11, titleColor:C.dark,
+    title:'Stock Cover by Product (Months)', showTitle:true, titleFontSize:11, titleColor:C.dark,
   });
 }
 
-// ── SLIDE: SUMMARY ────────────────────────────────────────────────────────────
-function buildSummary(pres, company, month, salesData, kpiData, financeData) {
+function buildSummary(pres, company, month, salesData, kpiData, financeData, arData, stockData) {
   const s = pres.addSlide();
   s.background = { color: C.navyDk };
   s.addShape(pres.ShapeType.rect, { x:0, y:0, w:0.22, h:5.625, fill:{color:C.teal}, line:{color:C.teal} });
-
   s.addText('Key Takeaways', { x:0.5, y:0.35, w:9, h:0.55, fontSize:28, bold:true, color:C.white, fontFace:'Trebuchet MS' });
-  s.addText(`${company} · ${month}`, { x:0.5, y:0.9, w:9, h:0.35, fontSize:11, color:C.iceBlue, italic:true });
-
+  
   const totRev  = salesData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
-  const totTgt  = salesData.reduce((a,r)=>a+(parseFloat(r.Target)||0),0);
-  const vsTgt   = safeDiv(totRev - totTgt, totTgt);
-  const bestMonth = salesData.length ? salesData.reduce((a,r)=>(parseFloat(r.Revenue)||0)>(parseFloat(a.Revenue)||0)?r:a).Month : 'N/A';
   const totEBIT = financeData.reduce((a,r)=>a+(parseFloat(r.EBITDA)||0),0);
-  const totRevF = financeData.reduce((a,r)=>a+(parseFloat(r.Revenue)||0),0);
-  const margin  = safeDiv(totEBIT, totRevF);
+  const margin  = safeDiv(totEBIT, totRev);
   const greenKPIs = kpiData.filter(r => kpiColor(r).text === C.green).length;
+  const tot90p = arData.reduce((a,r)=>a+(parseFloat(r.Days_90plus)||0),0);
+  const totAR = arData.reduce((a,r)=>a+(parseFloat(r.Outstanding)||0),0);
+  const dsoRisk = tot90p / (totAR||1);
+  
+  const stockWithCover = stockData.map(p => ({
+    ...p,
+    Cover_Months: parseFloat(p.Avg_Monthly_Usage) > 0 ? parseFloat(p.Current_Stock) / parseFloat(p.Avg_Monthly_Usage) : 0
+  }));
+  const lowStockCount = stockWithCover.filter(p => p.Cover_Months < 2).length;
+  const avgCover = stockWithCover.reduce((a,p) => a + p.Cover_Months, 0) / (stockWithCover.length || 1);
 
   const takeaways = [
-    { icon:'↑', color:C.teal,
-      head:'Revenue Performance',
-      body:`Total revenue of ${fmt(totRev)} is ${vsTgt>=0?'ahead of':'behind'} target by ${Math.abs(vsTgt).toFixed(1)}%. Strongest month: ${bestMonth}.` },
-    { icon:'$', color:C.green,
-      head:'Profitability',
-      body:`EBITDA of ${fmt(totEBIT)} represents a ${margin.toFixed(1)}% margin. Finance position is ${margin>=18?'healthy':'under pressure — review cost structure'}.` },
-    { icon:'◉', color:C.amber,
-      head:'KPI Health',
-      body:`${greenKPIs} of ${kpiData.length} KPIs are on-target. ${kpiData.length-greenKPIs > 0 ? `${kpiData.length-greenKPIs} metric(s) require management attention.` : 'All KPIs performing well.'}` },
+    { icon:'↑', color:C.teal, head:'Operations', body:`Stock cover averages ${avgCover.toFixed(1)} months. ${lowStockCount > 0 ? `${lowStockCount} product(s) below 2-month cover.` : 'Healthy inventory levels.'}` },
+    { icon:'$', color:margin>=18?C.green:C.amber, head:'Profitability', body:`EBITDA margin is ${margin.toFixed(1)}%. ${margin>=18?'On track':'Under pressure — review costs'}.` },
+    { icon:'⚠', color:dsoRisk > 0.15 ? C.red : C.amber, head:'Receivables', body:`${fmt(tot90p)} overdue 90+ days. ${dsoRisk > 0.15 ? 'Collections action needed.' : 'Monitor closely.'}` },
   ];
 
   takeaways.forEach((tk,i) => {
@@ -833,16 +953,12 @@ function buildSummary(pres, company, month, salesData, kpiData, financeData) {
     s.addText(tk.body, { x:1.2, y:y+0.52, w:8.1, h:0.55, fontSize:10.5, color:C.iceBlue, wrap:true });
   });
 
-  s.addText('Confidential · Generated by MIS Deck Generator v2 · For internal use only',
-    { x:0.5, y:5.2, w:9, h:0.3, fontSize:9, color:C.slateL, align:'center', italic:true });
+  s.addText('Made by CA Mayur Jain · For Finance Professionals', { x:0.5, y:5.2, w:9, h:0.3, fontSize:9, color:C.slateL, align:'center', italic:true });
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  // default month = current month
   const now = new Date();
-  document.getElementById('rpt-month').value =
-    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('rpt-month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   showPreview('sales');
 });
 </script>
